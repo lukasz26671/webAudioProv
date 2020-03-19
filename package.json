@@ -1,0 +1,22 @@
+{
+    "name": "webaudioprovider",
+    "version": "1.0.0",
+    "description": "a web app that converts youtube video into audio for my website",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lukasz26671/webAudioProv"
+    },
+    "author": "lukasz26671",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/lukasz26671/webAudioProv/issues"
+    },
+    "homepage": "https://website-audioprovider.herokuapp.com/",
+    "dependencies": {
+        "http": "0.0.0"
+    }
+}
