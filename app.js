@@ -40,11 +40,13 @@ app.get('/download', (req, res) => {
 })
 
 app.get('**********', (req, res) => {
-    let u = req.url.split('/')[1];
-    let ur = `youtube.com/watch?v=${u}`;
-    res.set({"Content-Type": "audio/mpeg" });
+    try {
+        let u = req.url.split('/')[1];
+        let ur = `youtube.com/watch?v=${u}`;
+        res.set({"Content-Type": "audio/mpeg" });
 
-    ffmpeg().setFfmpegPath(ffmpegPath).input(ytdl(ur)).toFormat('mp3').pipe(res);
+        ffmpeg().setFfmpegPath(ffmpegPath).input(ytdl(ur)).toFormat('mp3').pipe(res);
+    } catch (error) {console.log(error)}
 })
 function conv(form, {url=undefined, yid=undefined}, pipe) {
     if(url != undefined){
