@@ -23,29 +23,38 @@ app.get('/', (req, res)=>{
 }) 
 
 app.get('/download', (req, res) => {
-    var url = req.query.URL;
-    var yid = req.query.ID;
-    res.header('Content-Disposition', 'attachment; filename="vid_converted.mp3"');
+    try {
+        var url = req.query.URL;
+        var yid = req.query.ID;
+        res.header('Content-Disposition', 'attachment; filename="vid_converted.mp3"');
 
-    if(url != undefined){
-        ytdl(url, {
-            format: 'mp3'
-        }).pipe(res);
-    }
-    if(yid != undefined) {
-        ytdl(yid, {
-            format: 'mp3'
-        }).pipe(res);
-    }
+        if(url != undefined){
+            ytdl(url, {
+                format: 'mp3'
+            }).pipe(res);
+        }
+        if(yid != undefined) {
+            ytdl(yid, {
+                format: 'mp3'
+            }).pipe(res);
+        }
+    } catch(error) {console.log(error)}
 })
 
 app.get('**********', (req, res) => {
     try {
+        ffmpeg().kill();
+        var stream = ffmpeg().setFfmpegPath(ffmpegPath);
+        stream.on('error', (err, stdout, stderr)=>{
+            console.log(err.message);
+        })
+
         let u = req.url.split('/')[1];
         let ur = `youtube.com/watch?v=${u}`;
         res.set({"Content-Type": "audio/mpeg" });
-
-        ffmpeg().setFfmpegPath(ffmpegPath).input(ytdl(ur)).toFormat('mp3').pipe(res);
+        stream.input(ytdl(ur)).toFormat('mp3').pipe(res, {end: true}).on('end', ()=>{
+            console.log('Finished');
+        });
     } catch (error) {console.log(error)}
 })
 function conv(form, {url=undefined, yid=undefined}, pipe) {
