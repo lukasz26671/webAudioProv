@@ -20,17 +20,19 @@ let httpServer = app.listen(port, ()=>{
 
 app.get('/', (req, res)=>{
     res.sendFile(`${__dirname}/${config.mainEntry}`)
+    res.sendFile(`${__dirname}/styles.css`)
 }) 
 
 app.get('/download', (req, res) => {
     try {
         var url = req.query.URL;
         var yid = req.query.ID;
-        res.header('Content-Disposition', 'attachment; filename="vid_converted.mp3"');
+        res.header('Content-Disposition', 'attachment; filename="vid_converted.mp4"');
 
         if(url != undefined){
             ytdl(url, {
-                format: 'mp3'
+                format: 'mp4',
+                quality: "highestvideo"
             }).pipe(res);
         }
         if(yid != undefined) {
@@ -43,6 +45,7 @@ app.get('/download', (req, res) => {
 
 app.get('**********', (req, res) => {
     try {
+        if(req.url.includes("favicon")) return;
         ffmpeg().kill();
         var stream = ffmpeg().setFfmpegPath(ffmpegPath);
         stream.on('error', (err, stdout, stderr)=>{
@@ -57,6 +60,7 @@ app.get('**********', (req, res) => {
         });
     } catch (error) {console.log(error)}
 })
+
 function conv(form, {url=undefined, yid=undefined}, pipe) {
     if(url != undefined){
         ytdl(url, {
