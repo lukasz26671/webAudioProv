@@ -1,29 +1,33 @@
 {
-    "name": "webaudioprovider",
-    "version": "1.0.0",
-    "description": "a web app that converts youtube video into audio for my website",
-    "main": "app.js",
-    "scripts": {
-        "start": "node app.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/lukasz26671/webAudioProv"
-    },
-    "author": "lukasz26671",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/lukasz26671/webAudioProv/issues"
-    },
-    "homepage": "https://website-audioprovider.herokuapp.com/",
-    "dependencies": {
-        "@ffmpeg-installer/ffmpeg": "^1.0.20",
-        "cors": "^2.8.5",
-        "express": "^4.17.1",
-        "ffmpeg": "0.0.4",
-        "fluent-ffmpeg": "^2.1.2",
-        "http": "0.0.0",
-        "jsdom": "^16.2.1",
-        "ytdl-core": "^2.0.0"
-    }
+  "name": "webaudioprovider",
+  "version": "1.0.0",
+  "description": "a web app that converts youtube video into audio for my website",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lukasz26671/webAudioProv"
+  },
+  "author": "lukasz26671",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lukasz26671/webAudioProv/issues"
+  },
+  "homepage": "https://website-audioprovider.herokuapp.com/",
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.0.20",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "ffmpeg": "0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "http": "0.0.0",
+    "jsdom": "^16.2.1",
+    "ytdl-core": "^2.0.0",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
