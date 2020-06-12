@@ -19,7 +19,7 @@ let httpServer = app.listen(port, ()=>{
 })
 
 app.get('/', (req, res)=>{
-    res.sendFile(`${__dirname}/${config.mainEntry}`)
+    res.sendStatus(200);
 }) 
 
 app.get('/download', (req, res) => {
