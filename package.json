@@ -26,8 +26,4 @@
         "jsdom": "^16.2.1",
         "ytdl-core": "^2.0.0"
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> parent of 8f3fc11... Merge pull request #2 from lukasz26671/snyk-fix-fe45f0f335645677c0b80b7356051850
