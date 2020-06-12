@@ -37,7 +37,7 @@ app.get('/download', (req, res) => {
     } catch(error) {console.log(error)}
 })
 
-app.get(/^(?:[-a-zA-Z_0-9\/]){0,10}(?:\w+)$/g, (req, res) => {
+app.get(/^(?:[-a-zA-Z_0-9]){0,10}(?:\w+)$/g, (req, res) => {
     try {
         ffmpeg().kill();
 
