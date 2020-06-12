@@ -20,7 +20,6 @@ let httpServer = app.listen(port, ()=>{
 
 app.get('/', (req, res)=>{
     res.sendFile(`${__dirname}/${config.mainEntry}`)
-    res.sendFile(`${__dirname}/styles.css`)
 }) 
 
 app.get('/download', (req, res) => {
@@ -35,45 +34,39 @@ app.get('/download', (req, res) => {
                 quality: "highestvideo"
             }).pipe(res);
         }
-        if(yid != undefined) {
-            ytdl(yid, {
-                format: 'mp3'
-            }).pipe(res);
-        }
     } catch(error) {console.log(error)}
 })
 
-app.get(/^(?:[a-zA-Z-_/]){0,10}(?:\w+)$/g, (req, res) => {
+app.get(/^(?:[-a-zA-Z_0-9\/]){0,10}(?:\w+)$/g, (req, res) => {
     try {
-        if(req.url.includes("favicon")) return;
-
         ffmpeg().kill();
+
         var stream = ffmpeg().setFfmpegPath(ffmpegPath);
+
         stream.on('error', (err, stdout, stderr)=>{
             console.log(err.message);
         })
-
+        console.log(req.url)
         let u = req.url.split('/')[1];
-        let ur = `youtube.com/watch?v=${u}`;
+        let ur = `https://youtube.com/watch?v=${u}`;
+
         res.set({"Content-Type": "audio/mpeg" });
-        stream.input(ytdl(ur)).toFormat('mp3').pipe(res, {end: true}).on('end', ()=>{
+
+        stream.input(
+                ytdl(ur)).toFormat('mp3').pipe(res, {end: true}
+        ).on('end', ()=>{
             console.log('Finished');
         });
+
     } catch (error) {console.log(error)}
 })
 
-function conv(form, {url=undefined, yid=undefined}, pipe) {
-    if(url != undefined){
+function conv(form, {url="", yid=undefined}, pipe) {
+    if(url != ""){
         ytdl(url, {
             format: form
         }).pipe(pipe);
     }
-    if(yid != undefined) {
-        ytdl(yid, {
-            format: form
-        }).pipe(pipe);
-    }
-    
 }
 
 // app.use(cors());
