@@ -37,8 +37,9 @@ app.get('/download', (req, res) => {
     } catch(error) {console.log(error)}
 })
 
-app.get(/^(?:[-a-zA-Z_0-9\/]){0,10}(?:\w+)$/g, (req, res) => {
+app.get(/*/^(?:[-a-zA-Z_0-9\/]){0,10}(?:\w+)$/g*/"/***********", (req, res) => {
     try {
+        if(req.url.includes("favicon")) return;
         ffmpeg().kill();
 
         var stream = ffmpeg().setFfmpegPath(ffmpegPath);
