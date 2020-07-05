@@ -18,6 +18,7 @@ let httpServer = app.listen(port, ()=>{
     console.log(`Server running on  ${httpServer.address().address}:${port}`)
 })
 
+
 app.get('/', (req, res)=>{
     res.sendStatus(200);
 }) 
@@ -33,8 +34,14 @@ app.get('/download', (req, res) => {
                 format: 'mp4',
                 quality: "highestvideo"
             }).pipe(res);
+            res.statusCode = 302;
         }
-    } catch(error) {console.log(error)}
+    } catch(error) {
+        res.statusMessage = "API error"
+        res.statusCode = 500;
+        console.log(error)
+        res.end();
+    }
 })
 
 app.get(/*/^(?:[-a-zA-Z_0-9\/]){0,10}(?:\w+)$/g*/"/***********", (req, res) => {
@@ -53,13 +60,20 @@ app.get(/*/^(?:[-a-zA-Z_0-9\/]){0,10}(?:\w+)$/g*/"/***********", (req, res) => {
 
         res.set({"Content-Type": "audio/mpeg" });
 
+        res.statusCode = 302;
+
         stream.input(
                 ytdl(ur)).toFormat('mp3').pipe(res, {end: true}
         ).on('end', ()=>{
             console.log('Finished');
         });
 
-    } catch (error) {console.log(error)}
+    } catch (error) {
+        res.statusMessage = "API error"
+        res.statusCode = 500;
+        console.log(error)
+        res.end();
+    }
 })
 
 function conv(form, {url="", yid=undefined}, pipe) {
