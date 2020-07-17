@@ -63,7 +63,7 @@ const port = process.env.PORT || 3000
             var stream = ffmpeg().setFfmpegPath(ffmpegPath);
     
             stream.on('error', (err, stdout, stderr)=>{
-                console.log(err.message);
+                console.log(err);
             })
     
             console.log(`GET: ${req.url}`);
