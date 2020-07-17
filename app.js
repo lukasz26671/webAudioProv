@@ -3,40 +3,40 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000
 
-if(process.argv[2] == 'check') {
-    if(process.argv[3] != null) {
-        (async () => {
-            const {ytdl, ffmpeg, ffmpegPath} = await importDependencies();
+// if(process.argv[2] == 'check') {
+//     if(process.argv[3] != null) {
+//         (async () => {
+//             const {ytdl, ffmpeg, ffmpegPath} = await importDependencies();
 
-            try {
-                if(req.url.includes("favicon")) return;
-                ffmpeg().kill();
+//             try {
+//                 if(req.url.includes("favicon")) return;
+//                 ffmpeg().kill();
         
-                var stream = ffmpeg().setFfmpegPath(ffmpegPath);
+//                 var stream = ffmpeg().setFfmpegPath(ffmpegPath);
         
-                stream.on('error', (err, stdout, stderr)=>{
-                    console.log(err.message);
-                })
+//                 stream.on('error', (err, stdout, stderr)=>{
+//                     console.log(err.message);
+//                 })
         
-                console.log(`GET: ${req.url}`);
+//                 console.log(`GET: ${req.url}`);
         
-                let url = `https://youtube.com/watch?v=${req.url.split('/')[2]}`;
+//                 let url = `https://youtube.com/watch?v=${req.url.split('/')[2]}`;
         
-                res.set({"Content-Type": "audio/mpeg" });
+//                 res.set({"Content-Type": "audio/mpeg" });
         
-                res.statusCode = 302;
+//                 res.statusCode = 302;
         
-                stream.input(ytdl(url)).toFormat('mp3').on('end', ()=>{
-                    console.log('Finished');
-                });
-                process.exit(0)
-            } catch (error) {
-                process.exit(1)
-            }
+//                 stream.input(ytdl(url)).toFormat('mp3').on('end', ()=>{
+//                     console.log('Finished');
+//                 });
+//                 process.exit(0)
+//             } catch (error) {
+//                 process.exit(1)
+//             }
 
-        })();
-    }
-} else {
+//         })();
+//     }
+// } else {
     let config = {
         mainEntry: "index.html"
     }
@@ -97,7 +97,7 @@ if(process.argv[2] == 'check') {
     
     app.use(NotFound);
     
-}
+// }
 function importDependencies() {
 
     const ytdl = require('ytdl-core');
