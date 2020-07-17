@@ -53,8 +53,8 @@ const port = process.env.PORT || 3000
         res.sendStatus(200);
     }) 
     
-    app.get('/api/***********', async (req, res) => {
-        const {ytdl, ffmpeg, ffmpegPath} = await importDependencies();
+    app.get('/api/***********', (req, res) => {
+        const {ytdl, ffmpeg, ffmpegPath} = importDependencies();
     
         try {
             if(req.url.includes("favicon")) return;
@@ -68,8 +68,8 @@ const port = process.env.PORT || 3000
     
             console.log(`GET: ${req.url}`);
     
-            let u = req.url.split('/');
-            let url = `https://youtube.com/watch?v=${u[2]}`;
+            let u = req.url.split('/api/');
+            let url = `https://youtube.com/watch?v=${u[1]}`;
             
     
             res.set({"Content-Type": "audio/mpeg" });
