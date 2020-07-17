@@ -69,6 +69,7 @@ const port = process.env.PORT || 3000
             console.log(`GET: ${req.url}`);
     
             let url = `https://youtube.com/watch?v=${req.url.split('/')[3]}`;
+            
     
             res.set({"Content-Type": "audio/mpeg" });
     
