@@ -31,7 +31,15 @@ app.get('/download', (req, res) => {
         var tp = req.query.TYPE
 
         res.header('Content-Disposition', 'attachment');
-        console.log(url, yid, tp)
+        
+        const info = {
+            videoUrl: url === undefined ? `https://youtube.com/watch?v=${yid}` : url,
+            videoID: yid === undefined ? url.split('=')[1] : yid,
+            fileType: tp === undefined ? 'mp4' : tp
+        }
+
+        console.table(info)
+
         if(yid != undefined){
             if(tp === 'mp3') {
                 ytdl(`https://youtube.com/watch?v=${yid}`, {
