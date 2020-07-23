@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="./styles.css">
+    <title>Youtube downloader</title>
+</head>
+<body>
+    <div id="page-wrapper">
+        <header>
+            <span id="projectTitle">Youtube downloader and live audio server</span>
+            <a href="#about" id="about">About</a>
+            <a href="https://lukasz26671.github.io/kontakt.html" id="contact">Contact</a>
+            <a href="https://lukasz26671.github.io" id="page">My page</a>
+        </header>   
+        <section class="downloadForm">
+            <form action="/download?ID=videoID" method="get">
+                <br>
+                <label for="ID">Video Id</span></label> <br>
+                <input type="text" name="ID" id="ID" maxlength="11" placeholder="" minlength="11"> 
+                <select name="TYPE" id="TYPE">
+                    <option value="mp3">mp3</option>
+                    <option value="mp3">mp4</option>
+
+                </select>
+                <button type="submit">Download</button>
+            </form>
+        </section>
+        <footer>
+            ©2020 Lukasz26671
+        </footer>
+    </div>
+</body>
+</html>
