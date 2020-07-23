@@ -51,12 +51,6 @@ app.get('/download', async (req, res) => {
         var yid = req.query.ID;
         var tp = req.query.TYPE
         
-        const info = {
-            videoUrl: url === undefined ? `https://youtube.com/watch?v=${yid}` : url,
-            videoID: yid === undefined ? url.split('=')[1] : yid,
-            fileType: tp === undefined ? 'mp4' : tp
-        }
-
         const resHeaders = {
             mp3: {
                 'Accept-Ranges': 'bytes',
@@ -81,20 +75,29 @@ app.get('/download', async (req, res) => {
             }
         }
 
+        
+        if(tp === undefined) tp = 'mp4'
+        
+        const info = {
+            videoUrl: url === undefined ? `https://youtube.com/watch?v=${yid}` : url,
+            videoID: yid === undefined ? url.split('=')[1] : yid,
+            fileType: tp === 'mp4' ? 'mp4' : 'mp3'
+        }
+        
         console.table(info)
 
         if(yid != undefined){
 
-            const downloadedVideo = downloadFromYoutube(`https://youtube.com/watch?v=${yid}`, tp === undefined ? 'mp4' : 'mp3')
+            const downloadedVideo = downloadFromYoutube(`https://youtube.com/watch?v=${yid}`, (info.fileType ==='mp4') ? 'mp4' : 'mp3')
 
             downloadedVideo.then( (stream) => {
                 stream.pipe(res)
 
                 res.writeHead(200, 
-                    tp === undefined ? resHeaders.mp4 : resHeaders.mp3
+                    (info.fileType === 'mp4') ? resHeaders.mp4 : resHeaders.mp3
                 );
             });
-            
+
         }
     } catch(error) {
         res.statusMessage = "API error"
@@ -154,8 +157,8 @@ function downloadFromYoutube(url, format='mp4') {
             resolve(
                 ytdl(url,
                     {
-                        format: format === 'mp3' ? 'mp3' : 'mp4',
-                        filter: format === 'mp3' ? 'audioonly' : 'audioandvideo'
+                        format: (format === 'mp4') ? 'mp4' : (format  === 'mp3') ? 'mp3' : 'mp3',
+                        filter: (format === 'mp3') ? 'audioonly' : 'audioandvideo'
                     }
                 )
             );
