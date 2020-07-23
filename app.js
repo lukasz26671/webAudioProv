@@ -8,6 +8,7 @@ const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const app = express();
 const port = process.env.PORT || 3000
 
+
 let config = {
     mainEntry: "index.html"
 }
@@ -27,14 +28,43 @@ app.get('/download', (req, res) => {
     try {
         var url = req.query.URL;
         var yid = req.query.ID;
-        res.header('Content-Disposition', 'attachment; filename="vid_converted.mp4"');
+        var tp = req.query.TYPE
 
-        if(url != undefined){
-            ytdl(url, {
-                format: 'mp4',
-                quality: "highestvideo"
-            }).pipe(res);
-            res.statusCode = 302;
+        res.header('Content-Disposition', 'attachment');
+        console.log(url, yid, tp)
+        if(yid != undefined){
+            if(tp === 'mp3') {
+                ytdl(`https://youtube.com/watch?v=${yid}`, {
+                    format: 'mp3',
+                    filter: 'audioonly'
+                }).pipe(res);
+
+                res.writeHead(200, {
+                    'Accept-Ranges': 'bytes',
+                    'Connection':'keep-alive',
+                    'Transfer-Encoding':'chunked',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': '*',
+                    "Content-Disposition":"inline",
+                    "Content-Transfer-Enconding":"binary",
+                    'Content-Type': 'audio/mpeg'
+                });
+            } else if(tp === undefined || tp === 'mp4') {
+                ytdl(`https://youtube.com/watch?v=${yid}`, {
+                    format: 'mp4',
+                }).pipe(res);
+
+                res.writeHead(200, {
+                    'Accept-Ranges': 'bytes',
+                    'Connection':'keep-alive',
+                    'Transfer-Encoding':'chunked',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': '*',
+                    "Content-Disposition":"inline",
+                    "Content-Transfer-Enconding":"binary",
+                    'Content-Type': 'video/mp4'
+                });
+            }
         }
     } catch(error) {
         res.statusMessage = "API error"
@@ -47,27 +77,36 @@ app.get('/download', (req, res) => {
 app.get(/*/^(?:[-a-zA-Z_0-9\/]){0,10}(?:\w+)$/g*/"/***********", (req, res) => {
     try {
         if(req.url.includes("favicon")) return;
-        ffmpeg().kill();
+        
+        const stream = ffmpeg({timeout: 15}).setFfmpegPath(ffmpegPath)
 
-        var stream = ffmpeg().setFfmpegPath(ffmpegPath);
+        stream.on('error', err => console.log(err))
 
-        stream.on('error', (err, stdout, stderr)=>{
-            console.log(err.message);
-        })
-        console.log(req.url)
-        let u = req.url.split('/')[1];
-        let ur = `https://youtube.com/watch?v=${u}`;
+        console.log(`GET: ${req.url}`);
+        
+        let uri = `https://youtube.com/watch?v=${
+            req.url.split('/')[1]
+        }`;
 
-        res.set({"Content-Type": "audio/mpeg" });
+        console.log(uri)
 
-        res.statusCode = 302;
-
-        stream.input(
-                ytdl(ur)).toFormat('mp3').pipe(res, {end: true}
-        ).on('end', ()=>{
-            console.log('Finished');
+        ytdl(uri, {format: 'mp4'})
+        .addListener('end', (err) => console.log(err))   
+        .pipe(res)
+        
+        res.writeHead(302, {
+            'Accept-Ranges': 'bytes',
+            'Connection':'keep-alive',
+            'Transfer-Encoding':'chunked',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': '*',
+            "Content-Disposition":"inline",
+            "Content-Transfer-Enconding":"binary",
+            'Content-Type': 'video/mp4'
         });
-
+        
+        
+        
     } catch (error) {
         res.statusMessage = "API error"
         console.log(error)
