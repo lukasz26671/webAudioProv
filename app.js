@@ -22,13 +22,8 @@ let httpServer = app.listen(port, ()=>{
     console.log(`Server running on  ${httpServer.address().address}:${port}`)
 })
 
-//? Root request
-//todo use express static?
-// app.get('/', (req, res)=>{
-// }) 
-
 //? Status for API and website
-app.get('/status', async (req, res) => {
+app.get('/api/status', async (req, res) => {
 
     let websiteStatus = (await fetch(`https://website-audioprovider.herokuapp.com/`)).ok;
     let apiStatus = (await fetch(`https://website-audioprovider.herokuapp.com/download?ID=kJQP7kiw5Fk&TYPE=mp3`)).ok;
@@ -43,6 +38,34 @@ app.get('/status', async (req, res) => {
         statusMessage: response,
     })
 })
+
+//? Status for API and website with visualization
+app.get('/status', async (req, res) => {
+
+    let websiteStatus = (await fetch(`https://website-audioprovider.herokuapp.com/`)).ok;
+    let apiStatus = (await fetch(`https://website-audioprovider.herokuapp.com/download?ID=kJQP7kiw5Fk&TYPE=mp3`)).ok;
+
+    const response = {
+        website: websiteStatus ? `Available` : `Unavaliable`,
+        api: apiStatus ? `Available` : `Unavailable`,
+    }
+
+    let generatedPage = `
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"><style>*{font-family: 'Roboto'}</style>
+    <div>
+    `;
+
+    res.statusCode = 200;
+
+    generatedPage += `<p>Response code: <span style="color: blue">${res.statusCode}</span></p>`
+    generatedPage += `<p>Website status: <span style="color: ${websiteStatus ? 'lime' : 'red'}">${response.website}</span></p>`
+    generatedPage += `<p>API status: <span style="color: ${apiStatus ? 'lime' : 'red'}">${response.api}</span></p>`
+
+    generatedPage += '</div>'
+
+    res.send(generatedPage);
+})
+
 
 //todo - rewrite (uzycie funkcji do konwersji)
 app.get('/download', async (req, res) => {
@@ -108,49 +131,6 @@ app.get('/download', async (req, res) => {
 })
 
 
-//? let's stop supporting this maybe?
-/* 
-    app.get("/***********", (req, res) => {
-        try {
-            if(req.url.includes("favicon")) return;
-            
-            const stream = ffmpeg({timeout: 15}).setFfmpegPath(ffmpegPath)
-
-            stream.on('error', err => console.log(err))
-
-            console.log(`GET: ${req.url}`);
-            
-            let uri = `https://youtube.com/watch?v=${
-                req.url.split('/')[1]
-            }`;
-
-            console.log(uri)
-
-            ytdl(uri, {format: 'mp4'})
-            .addListener('end', (err) => console.log(err))   
-            .pipe(res)
-            
-            res.writeHead(302, {
-                'Accept-Ranges': 'bytes',
-                'Connection':'keep-alive',
-                'Transfer-Encoding':'chunked',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': '*',
-                "Content-Disposition":"inline",
-                "Content-Transfer-Enconding":"binary",
-                'Content-Type': 'video/mp4'
-            });
-            
-            
-            
-        } catch (error) {
-            res.statusMessage = "API error"
-            console.log(error)
-            res.status(500).end();
-        }
-    }) 
-*/
-
 function downloadFromYoutube(url, format='mp4') {
     return new Promise((resolve, reject) => {
         try{ 
@@ -173,7 +153,6 @@ function downloadFromYoutube(url, format='mp4') {
 //? /^(?:[-a-zA-Z_0-9\/]){11}(?:\w+)$/g  
 
 
-
 //! Używać poprzez app.use() na końcu kodu
 //TODO: Bardziej przejrzysty error message
 function NotFound(req, res, next) {
@@ -181,34 +160,3 @@ function NotFound(req, res, next) {
 }
 
 app.use(NotFound);
-
-
-//todo - rewrite
-function conv(form, {url="", yid=undefined}, pipe) {
-    if(url != ""){
-        ytdl(url, {
-            format: form
-        }).pipe(pipe);
-    }
-}
-
-//? Old website handling
-/*
-app.use(cors());
-
-app.listen(port, ()=> {
-    console.log(`Server running at ${port}`);
-})
-app.get('/', (req, res)=> {
-    res.sendFile(`${__dirname}/index.html`);
-})
-
-app.get('/download', (req, res) => {
-    var url = req.query.url;
-    res.header('Content-Disposition', 'attachment; filename="video.mp3"');
-    ytdl(url, {
-        format: 'mp3'
-    }).pipe(res);
-}); 
-*/
-
