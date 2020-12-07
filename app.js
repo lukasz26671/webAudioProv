@@ -5,7 +5,10 @@ const cors = require('cors');
 const ytdl = require('ytdl-core');
 const app = express();
 const fetch = require('node-fetch')
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 80
+
+// "node-fetch": "^2.6.1",
+
 
 
 //todo move to separate file
