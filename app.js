@@ -77,21 +77,34 @@ app.get('/status', async (req, res) => {
     res.send(generatedPage);
 })
 
+const SendMedia = async (req, res, parquery) => {
 
-//todo - rewrite (uzycie funkcji do konwersji)
-app.get('/download', async (req, res) => {
     try {
-        var url = req.query.URL;
-        var yid = req.query.ID;
+        var url;
+        var yid;
         var tp = req.query.TYPE
+        
+        if(parquery.toLowerCase() === "query") {
+            url = req.query.URL || "";
+            yid = req.query.ID || "";
+        } else if (parquery.toLowerCase() === "params") {
+            url = req.params.URL || "";
+            yid = req.params.ID || "";
+        }
      
         if(tp === undefined) tp = 'mp4'
         
         const info = {
-            videoUrl: url === undefined ? `https://youtube.com/watch?v=${yid}` : url,
-            videoID: yid === undefined ? url.split('=')[1] : yid,
+            videoUrl: url === "" ? `https://youtube.com/watch?v=${yid}` : url,
+            videoID: yid === "" ? url.split('=')[1] : yid,
             fileType: tp === 'mp4' ? 'mp4' : 'mp3'
         }
+
+        let vidTitle; 
+
+        ytdl.getInfo(`https://youtube.com/watch?v=${yid}`, (err, info)=> {
+            app.set('title', vidTitle);
+        });
         
         console.table(info)
 
@@ -101,6 +114,7 @@ app.get('/download', async (req, res) => {
 
             downloadedVideo.then( (stream) => {
                 stream.pipe(res)
+                
 
                 res.writeHead(200, 
                     (info.fileType === 'mp4') ? encoding_headers.mp4 : encoding_headers.mp3
@@ -114,8 +128,15 @@ app.get('/download', async (req, res) => {
         console.log(error)
         res.end();
     }
-})
+}
 
+
+app.get('/download', async (req, res) => {
+    SendMedia(req, res, "query");
+})
+app.get('/stream/:ID', async (req, res) => {
+    SendMedia(req, res, "params");
+})
 
 function downloadFromYoutube(url, format='mp4') {
     return new Promise((resolve, reject) => {
