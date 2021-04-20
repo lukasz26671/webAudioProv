@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", ()=> {
     var URLinput = document.querySelector('.URL-input');
 
     convertBtn.addEventListener('click', () => {
-        console.log(`URL: ${URLinput.value}`);
         sendURL(URLinput.value);
     });
 })
