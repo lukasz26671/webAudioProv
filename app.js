@@ -7,6 +7,7 @@ const app = express();
 const fetch = require('node-fetch')
 const port = process.env.PORT || 80
 
+
 // "node-fetch": "^2.6.1",
 const encoding_headers = {
     mp3:{
@@ -77,7 +78,7 @@ app.get('/status', async (req, res) => {
     res.send(generatedPage);
 })
 
-const SendMedia = async (req, res, parquery) => {
+const StreamMedia = async (req, res, parquery) => {
 
     try {
         var url;
@@ -130,12 +131,45 @@ const SendMedia = async (req, res, parquery) => {
     }
 }
 
+const DownloadMedia = async(req, res) => {
+
+    const videoData = [];
+
+    var url;
+    var yid;
+    var tp = req.query.TYPE
+    
+    url = req.query.URL || "";
+    yid = req.query.ID || "";
+    
+    
+    if(tp === undefined) tp = 'mp4'
+    
+    const _info = {
+        videoUrl: url === "" ? `https://youtube.com/watch?v=${yid}` : url,
+        videoID: yid === "" ? url.split('=')[1] : yid,
+        fileType: tp === 'mp4' ? 'mp4' : 'mp3'
+    }
+
+    let mediaFile = await downloadFromYoutube(_info.videoUrl, _info.tp);
+
+    
+    ytdl.getInfo(_info.videoUrl, {downloadURL: true}, async (err, info)=> {
+        if(err) console.log(err);
+        app.set('title', info.title);
+        console.table(_info)
+        
+        res.header('Content-Disposition', `attachment; filename='${_info.title || "video"}.mp4'`);
+    })
+    
+    mediaFile.pipe(res);
+}
 
 app.get('/download', async (req, res) => {
-    SendMedia(req, res, "query");
+    DownloadMedia(req, res);
 })
 app.get('/stream/:ID', async (req, res) => {
-    SendMedia(req, res, "params");
+    StreamMedia(req, res, "params");
 })
 
 function downloadFromYoutube(url, format='mp4') {

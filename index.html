@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table</title>
+    <style>
+        table, td, th {
+            border: 1px solid black;
+            margin: auto;  
+        }
+    </style>
+</head>
+<body>
+    <table>
+        
+    </table>
+    <script>
+        const ROW_NUM = 5;
+        const COL_NUM = 3;
+
+        const UNIQUE_ELEMNT = 2;
+        const HEADER_ROW = 0;
+
+        const GenerateTable = async() => {
+            const table = document.querySelector('table');
+            try {
+                for (let i = 0; i < ROW_NUM; i++) {
+                    const row = document.createElement('tr')        
+                    
+                    table.appendChild(row);
+
+                    for (let j = 0; j < COL_NUM; j++) {
+                        const col = document.createElement('td');
+                        col.style.fontWeight = i === HEADER_ROW ? 'bold' : 'normal';
+                        col.style.color = j === UNIQUE_ELEMNT ? 'red' : 'initial';
+                        col.innerText = `Column nr ${j+1}`
+                        row.appendChild(col);
+                    }
+                }
+                return {completed: true, message: "abcsafasfasf"}
+            } catch (err) {}
+        }
+        
+        Array.prototype.Empty = function() {return this.length === 0};
+        
+        Array.prototype.AddOne = function() {
+            this.map(val => val+1)
+        }
+        Array.prototype.fill = function(n) {
+            for (let i = 0; i < n; i++) {
+                this.push(i);
+            }
+        }
+        let abc = []
+
+        console.log(abc.Empty());
+        abc.fill(20);
+        
+    </script>
+</body>
+</html>
