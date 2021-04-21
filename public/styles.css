@@ -122,11 +122,18 @@ footer {
     margin: 0;
 }
 
+button, input, option, select {
+    color: black;
+    border-radius: 10px;
+    padding: 0.2em;
+}
 .downloadForm > input {
     border-radius: 5px;
     background-color: green;
 }
-
+#notice {
+    display: inline-block;
+}
 #page-wrapper {
     height: 100vh;
 }

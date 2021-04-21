@@ -11,7 +11,7 @@
         <header>
             <span id="projectTitle">Youtube downloader and live audio server</span>
             <a href="#about" id="about">About</a>
-            <a href="https://lukasz26671.github.io/kontakt.html" id="contact">Contact</a>
+            <a href="https://lukasz26671.github.io/contact" id="contact">Contact</a>
             <a href="https://lukasz26671.github.io" id="page">My page</a>
         </header>   
         <section class="downloadForm">
@@ -22,14 +22,30 @@
                 <select name="TYPE" id="TYPE">
                     <option value="mp3">mp3</option>
                     <option value="mp4">mp4</option>
-
                 </select>
                 <button type="submit">Download</button>
+                <button type="button" class="stream">Stream</button>
             </form>
+            
         </section>
         <footer>
+            <div id="notice">
+                <p>Note: If you pass a wrong youtube ID somehow, this will be played:</p>
+                <audio style="text-align: center; transform:scale(0.5)" controls src="./stream/x30YOmfeVTE?TYPE=mp3"></audio>
+            </div>  -
+            <br>
             ©2020 Lukasz26671
         </footer>
     </div>
+    <script>
+        document.querySelector('.stream').addEventListener('click', ()=> {
+            let a = document.getElementById("TYPE").value;
+            let i = document.getElementById("ID").value;
+            if(i.length != 11) {
+                i = "x30YOmfeVTE";
+            }
+            location.href += (`stream/${i}?TYPE=${a}`);
+        })
+    </script>
 </body>
 </html>
