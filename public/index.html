@@ -44,7 +44,7 @@
             if(i.length != 11) {
                 i = "x30YOmfeVTE";
             }
-            location.href += (`stream/${i}?TYPE=${a}`);
+            location.href = (`${location.protocol}//${location.host}${location.pathname}stream/${i}?TYPE=${a}`);
         })
     </script>
 </body>
